@@ -5,22 +5,20 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 import random
-
+from collections import Counter
 
 driver = webdriver.Chrome()
 
 user_amount = int(input("Enter amount of users: "))
 usernames = []
-all_movies = []
 dup = []
+all_movies = []
 
 for i in range(user_amount):
     username = str(input("Enter username: "))
     usernames.append(username)
 
-
 for username in usernames:
-
 
     driver.get(f"https://letterboxd.com/{username}/watchlist/")
 
@@ -37,28 +35,24 @@ for username in usernames:
         print(f"Scraping: https://letterboxd.com/{username}/watchlist/")
 
         try:
-            next_button = WebDriverWait(driver, 20).until(
+            next_button = WebDriverWait(driver, 5).until(
                 EC.element_to_be_clickable((By.XPATH, '//a[@class="next"]'))
             )
             next_button.click()
 
             time.sleep(random.uniform(1, 3))
-        except Exception as e:
-            print("No more pages or error:", e)
+        except:
+            print("No more pages or error:")
             break
-
-
 
 driver.quit()
 
-s = set()
+counts = Counter(all_movies)
 
-for n in all_movies:
-    if n in s:
-        dup.append(n)
-    else:
-        s.add(n)
+movie_amount = max(counts.values())
 
-print(dup)
-
-
+while movie_amount > 1:
+    for movie, count in counts.items():
+        if count == movie_amount:
+            print(f"{movie} - {count}")
+    movie_amount -= 1
