@@ -23,6 +23,7 @@ for username in usernames:
     driver.get(f"https://letterboxd.com/{username}/watchlist/")
 
     while True:
+        time.sleep(3)
         page_source = driver.page_source
         soup = BeautifulSoup(page_source, 'html.parser')
 
